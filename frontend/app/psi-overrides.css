@@ -1,0 +1,26 @@
+/* PSI 버전명 입력을 없앤 뒤 기준월·기준일·파일·버튼 4개 항목을 정렬합니다. */
+.psi-upload-form {
+  grid-template-columns: 190px minmax(300px, 1fr) auto;
+}
+
+@media (max-width: 1000px) {
+  .psi-upload-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.danger-button {
+  padding: 7px 10px;
+  border: 1px solid #e0e3e5;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #6f7782;
+  cursor: pointer;
+  font: inherit;
+  font-size: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.danger-button:hover:not(:disabled) { background: #f4f5f3; }
+.danger-button:disabled { cursor: not-allowed; opacity: .55; }

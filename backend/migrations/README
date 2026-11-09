@@ -1,0 +1,8 @@
+데이터베이스 스키마 변경 관리:
+
+1. backend 폴더에서 활성 Python 환경을 설정한 뒤 다음을 실행합니다.
+   alembic revision --autogenerate -m "변경 내용 요약"
+2. 생성된 backend/migrations/versions 마이그레이션 파일을 직접 확인하고 수정합니다.
+3. 적용은 `alembic upgrade head`, 한 단계 되돌림은 `alembic downgrade -1` 입니다.
+4. 로컬 PostgreSQL 16.15에서 `alembic upgrade head`와 `alembic check`를 검증했습니다. 외부 배포 DB는 아직 검증하지 않았습니다.
+5. 로컬 PostgreSQL의 테이블과 합성 데이터는 서버 시작 때 자동 준비됩니다. `scripts/setup-db.py`가 프로젝트 전용 DB를 먼저 시작합니다.
