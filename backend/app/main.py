@@ -36,12 +36,23 @@ from .order_edit_routes import router as order_edit_router
 # FastAPI 앱 본체입니다. uvicorn이 app.main:app을 찾아 서버를 시작합니다.
 app = FastAPI(title="SCM Shipment Control Tower API", version="0.1.0", description="합성 데모 자료용 API")
 # 브라우저 개발 주소에서 API를 호출할 수 있도록 허용합니다.
+
+
+
+frontend_origin = os.getenv(
+    "FRONTEND_ORIGIN",
+    "http://127.0.0.1:3000",
+)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[frontend_origin],
+    allow_credentials=True,
     allow_methods=["GET", "POST", "PATCH", "DELETE"],
     allow_headers=["Content-Type"],
 )
+
+
 # 기능별로 나눈 API 묶음을 하나의 앱에 연결합니다.
 app.include_router(upload_router)
 app.include_router(auth_router)
