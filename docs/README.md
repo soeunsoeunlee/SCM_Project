@@ -587,6 +587,8 @@ Excel은 입력·출력 형식으로 사용하며 유일한 데이터 저장소�
 
 기본 사이트와 판매자료 업로드·표준화는 로컬 PostgreSQL에서 실행 검증했습니다. 최신 실행 명령과 확인 순서는 루트 [README.md](../README.md)에 기록합니다.
 
+Cloudflare Pages 프런트엔드는 저장소의 `frontend`를 루트로 사용하고 `npm run build` 결과인 `out`을 배포합니다. Cloudflare가 자동 제공하는 `CF_PAGES=1`에서만 정적 내보내기를 켜며, 로컬 Next.js 실행은 기존 FastAPI rewrite를 유지합니다. 배포 화면의 `/api/backend/*` 요청은 Pages Function이 `BACKEND_API_URL`에 설정한 Lightsail API로 중계합니다. 주소는 환경변수로만 관리하고 저장소에 실제 운영 주소나 비밀값을 기록하지 않습니다. 정적 결과물 생성은 검증했으며 실제 배포 주소의 인증·업로드·다운로드 동작은 배포 후 별도로 확인합니다.
+
 프로젝트 기본 환경을 구축한 후 다음 내용을 실제 명령과 경로로 작성합니다.
 
 - 필요한 프로그램과 버전

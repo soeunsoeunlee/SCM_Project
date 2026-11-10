@@ -29,7 +29,7 @@
 - Sales Master의 합성 주문 저장, 재조회 및 서버 재시작 후 보존
 - 나머지 업무 메뉴의 역할 설명과 `준비 중` 표시
 
-판매계획 주문 버전의 승인 반영 엔진, Gmail·실제 ERP 연동과 외부 배포는 아직 구현하지 않았습니다. 생산·선적정보는 PO·모델·행별 판매법인·가용수량이 안전하게 일치할 때 PST 또는 ETD 예정 물량을 자동 연결합니다. OpenAI 키가 설정된 경우 규칙으로 단일 주문을 찾지 못한 생산·선적 행에는 AI가 후보와 근거를 제안하지만 `검토 필요`로만 보존합니다. 양식이 달라진 후속 판매계획도 AI 후보는 Sales Master의 `업데이트 검토`에만 나타나며 주문을 자동 변경하지 않습니다.
+판매계획 주문 버전의 승인 반영 엔진, Gmail·실제 ERP 연동은 아직 구현하지 않았습니다. Cloudflare Pages용 정적 프런트엔드 빌드와 Lightsail API 중계 Function은 준비했지만 실제 배포 주소에서의 동작 확인은 남아 있습니다. 생산·선적정보는 PO·모델·행별 판매법인·가용수량이 안전하게 일치할 때 PST 또는 ETD 예정 물량을 자동 연결합니다. OpenAI 키가 설정된 경우 규칙으로 단일 주문을 찾지 못한 생산·선적 행에는 AI가 후보와 근거를 제안하지만 `검토 필요`로만 보존합니다. 양식이 달라진 후속 판매계획도 AI 후보는 Sales Master의 `업데이트 검토`에만 나타나며 주문을 자동 변경하지 않습니다.
 
 ## 확인된 개발 환경
 
@@ -69,6 +69,30 @@ powershell -ExecutionPolicy Bypass -File .\scripts\stop.ps1
 ```
 
 다시 시작할 때는 `start.ps1`을 다시 실행하면 됩니다. 시작에 실패하면 `.local/api-error.log`, `.local/web-error.log`, `.local/postgres.log`를 확인합니다.
+
+## Cloudflare Pages 배포 설정
+
+GitHub 연동 Cloudflare Pages에서는 다음 값을 사용합니다.
+
+| 설정 | 값 |
+|---|---|
+| Root directory | `frontend` |
+| Build command | `npm run build` |
+| Build output directory | `out` |
+| Production branch | `main` |
+
+Cloudflare가 자동으로 넣는 `CF_PAGES=1`일 때만 Next.js 정적 내보내기를 사용하므로 기존 Windows 로컬 실행 방식은 그대로 유지됩니다. Pages 프로젝트의 `Settings > Variables and Secrets`에는 `BACKEND_API_URL`을 추가하고, 값에는 외부에서 접속 가능한 Lightsail FastAPI 기본 주소를 입력합니다. 실제 주소나 키는 저장소에 커밋하지 않습니다. 브라우저의 기존 `/api/backend/...` 요청은 `frontend/functions/api/backend/[[path]].ts`가 백엔드로 중계합니다.
+
+Cloudflare와 같은 빌드를 로컬에서 확인하려면 다음 명령을 사용합니다.
+
+```powershell
+cd frontend
+$env:CF_PAGES="1"
+npm.cmd run build
+Remove-Item Env:CF_PAGES
+```
+
+성공하면 `frontend/out` 폴더가 생성됩니다.
 
 ### 프로젝트 만들기와 삭제
 

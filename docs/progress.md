@@ -2,6 +2,14 @@
 
 요구사항 원본은 [README.md](README.md), 항목별 상태는 [requirements.md](requirements.md), 관계 설계는 [data-model.md](data-model.md), 개발 원칙은 [../AGENTS.md](../AGENTS.md)를 기준으로 합니다.
 
+## 2026-11-10 Cloudflare Pages 정적 배포 빌드
+
+- Cloudflare가 자동 제공하는 `CF_PAGES=1`에서 Next.js `output: export`를 사용해 `frontend/out`을 생성하도록 했습니다. 로컬 개발·실행에서는 기존 FastAPI rewrite를 유지합니다.
+- 동적 메뉴 경로에 `psi`, `history`, `settings` 정적 매개변수를 명시해 Pages에서도 기존 주소가 생성되도록 했습니다.
+- 기존 `/api/backend/*` 호출을 바꾸지 않고 Lightsail로 전달하는 Pages Function을 추가했습니다. 백엔드 기본 주소는 Cloudflare의 `BACKEND_API_URL` 환경변수에서만 읽습니다.
+- TypeScript 검사와 `CF_PAGES=1 npm run build`를 실행해 `out` 및 대시보드·Sales Master·자료 업로드·PSI·변경 이력·설정 HTML 생성을 확인했습니다.
+- 실제 Cloudflare 배포 URL에서의 로그인, API 중계, 파일 업로드·다운로드는 아직 미검증입니다.
+
 ## 2026-11-06 프로젝트 기준 날짜·Sales Master 화면 정리
 
 - 공통 상단 우측에 프로젝트별 `기준 날짜` 입력을 추가했습니다. 기본값은 마이그레이션 적용일인 2026-11-06이며 변경값은 PostgreSQL에 저장됩니다.
